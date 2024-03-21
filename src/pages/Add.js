@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const Add = () => {
   const [book, setBook] = useState({
@@ -11,7 +13,17 @@ const Add = () => {
     setBook((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  console.log(book)
+  const navigate = useNavigate()
+
+  const handleClick = async (e) => {
+    e.preventDefault()
+    try {
+      await axios.post('http://localhost:5000/books', book)
+      navigate('/')
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   return (
     <div className='form'>
@@ -26,7 +38,7 @@ const Add = () => {
         type='text'
         placeholder='desc'
         onChange={handleChange}
-        name='desc'
+        name='description'
       />
       <input
         type='number'
@@ -40,6 +52,9 @@ const Add = () => {
         onChange={handleChange}
         name='cover'
       />
+      <button className='formButton' onClick={handleClick}>
+        Add
+      </button>
     </div>
   )
 }
